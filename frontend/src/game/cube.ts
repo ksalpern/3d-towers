@@ -6,6 +6,7 @@ class Cube {
   private depth: number
   private scene: BABYLON.Scene
   private position: BABYLON.Vector3
+  private previousCubeMesh: BABYLON.Mesh | null = null;
 
   constructor(
     scene: BABYLON.Scene,
@@ -20,7 +21,11 @@ class Cube {
   }
 
   renderCube() {
-    const cubeMesh =  BABYLON.MeshBuilder.CreateBox(
+    if (this.previousCubeMesh) {
+      this.previousCubeMesh.dispose();
+    }
+    
+    const cubeMesh = BABYLON.MeshBuilder.CreateBox(
       'cube',
       {
         width: this.width,
@@ -28,14 +33,44 @@ class Cube {
         depth: this.depth,
       },
       this.scene,
-    )
-    cubeMesh.position = this.position
-    
+    );
+    cubeMesh.position = this.position;
+
+    this.previousCubeMesh = cubeMesh;
   }
 
   setPosition(position: BABYLON.Vector3) {
     this.position = position // Оновлюємо позицію куба
     // Додайте також оновлення позиції в рендерингу, якщо потрібно
+  }
+
+  moveX(delta: number) {
+    this.position.x += delta; // Змінюємо позицію по осі X
+    this.renderCube(); // Рендеримо куб на новій позиції
+  }
+
+  updateScene() {
+    
+  }
+
+  animateMoveX(delta: number, duration: number) {
+    const startTime = performance.now();
+    const initialPosition = this.position.x;
+
+    const animate = (currentTime: number) => {
+      const elapsedTime = currentTime - startTime;
+      const progress = Math.min(elapsedTime / duration, 1); // Нормалізуємо прогрес від 0 до 1
+
+      this.position.x = initialPosition + delta * progress; // Оновлюємо позицію
+      this.position.z = initialPosition + delta * progress; // Оновлюємо позицію
+      this.renderCube(); // Рендеримо куб на новій позиції
+
+      if (progress < 1) {
+        requestAnimationFrame(animate); // Продовжуємо анімацію
+      }
+    };
+
+    requestAnimationFrame(animate); // Запускаємо анімацію
   }
 }
 

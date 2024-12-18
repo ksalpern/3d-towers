@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Cube from '@/game/cube';
-import { Ground } from '@/game/ground';
+import Ground from '@/game/ground';
 import * as BABYLON from '@babylonjs/core'
 import { onMounted, ref } from 'vue'
 
@@ -15,27 +15,31 @@ onMounted(async () => {
   const createScene = async () => {
     const scene = new BABYLON.Scene(engine!)
     scene.createDefaultLight()
-    const ground = new Ground(20, 20, 20, scene)
-    ground.renderGround()
+    // const ground = new Ground(20, 20, 20, scene)
+    // ground.renderGround()
 
-    // const ground = BABYLON.MeshBuilder.CreateGround('ground', {
-    //   width: 20,
-    //   height: 20,
-    //   subdivisions: 20,
-    // })
-    // ground.position.y = 0
+    const matrix = [
+      [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+    ];
+
+    const ground = new Ground(scene, {w: matrix[0].length, h: matrix.length}, matrix);
+    ground.createGround();
 
     const wireframeMaterial = new BABYLON.StandardMaterial('wireframeMaterial', scene)
     wireframeMaterial.wireframe = true
-    // ground.material = wireframeMaterial
-
 
     const cube = new Cube(scene, { width: 1, height: 1, depth: 1 }, new BABYLON.Vector3(0, 0.5, 0))
     cube.renderCube()
-
-
-    // cube.setPosition(new BABYLON.Vector3(0, 2, 0))
-    // cube.renderCube()
+    // cube.moveX(10)
+    // cube.animateMoveX(2, 1000)
 
     const camera = new BABYLON.ArcRotateCamera(
       'camera',
