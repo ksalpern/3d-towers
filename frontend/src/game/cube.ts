@@ -20,7 +20,7 @@ class Cube {
     this.position = position
   }
 
-  renderCube() {
+  public renderCube(): BABYLON.Mesh {
     if (this.previousCubeMesh) {
       this.previousCubeMesh.dispose();
     }
@@ -37,6 +37,7 @@ class Cube {
     cubeMesh.position = this.position;
 
     this.previousCubeMesh = cubeMesh;
+    return cubeMesh;
   }
 
   setPosition(position: BABYLON.Vector3) {
