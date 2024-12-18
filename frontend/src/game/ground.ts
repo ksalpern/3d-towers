@@ -29,10 +29,12 @@ class Ground {
     );
 
     const whiteMaterial = new BABYLON.StandardMaterial("White");
-    whiteMaterial.diffuseColor = new BABYLON.Color3(1, 1, 1);
+    whiteMaterial.diffuseTexture = new BABYLON.Texture("/assets/grass.png");
 
     const blackMaterial = new BABYLON.StandardMaterial("Black");
-    blackMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    // blackMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    blackMaterial.diffuseTexture = new BABYLON.Texture("/assets/rock.png");
+
 
     const verticesCount = tiledGround.getTotalVertices();
     const indices = tiledGround.getIndices();
